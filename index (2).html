@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CV Match — ¿Vale la pena postularse?</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap');
+
+  :root {
+    --bg: #0a0c12;
+    --surface: #111318;
+    --surface2: #181b24;
+    --border: #1f2333;
+    --accent: #00e87a;
+    --accent-glow: #00e87a22;
+    --warn: #ffb300;
+    --danger: #ff4757;
+    --text: #e8eaf2;
+    --muted: #545878;
+    --font-head: 'Syne', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    background-image: radial-gradient(ellipse 60% 30% at 50% 0%, #00e87a0a 0%, transparent 60%);
+  }
+
+  .hero {
+    text-align: center;
+    padding: 56px 24px 40px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .hero .badge {
+    display: inline-block;
+    background: var(--accent-glow);
+    border: 1px solid #00e87a40;
+    color: var(--accent);
+    font-family: var(--font-head);
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 99px;
+    margin-bottom: 20px;
+  }
+
+  .hero h1 {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(2rem, 6vw, 3.4rem);
+    line-height: 1.08;
+    margin-bottom: 14px;
+  }
+
+  .hero h1 span { color: var(--accent); }
+
+  .hero p {
+    font-size: 1rem;
+    color: var(--muted);
+    max-width: 500px;
+    margin: 0 auto;
+    line-height: 1.65;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 36px 20px 60px;
+  }
+
+  .steps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: 32px;
+  }
+
+  .step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.75rem;
+    font-family: var(--font-head);
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  .step.active { color: var(--accent); }
+
+  .step-num {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 1px solid currentColor;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.68rem;
+    font-weight: 700;
+  }
+
+  .step-arrow {
+    width: 40px;
+    height: 1px;
+    background: var(--border);
+    margin: 0 8px;
+  }
+
+  .inputs-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  @media(max-width: 640px) { .inputs-grid { grid-template-columns: 1fr; } }
+
+  .input-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    transition: border-color 0.2s;
+  }
+
+  .input-card:focus-within { border-color: #00e87a50; }
+
+  .input-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-head);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+
+  .input-label .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  textarea {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    padding: 14px;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    line-height: 1.65;
+    outline: none;
+    resize: vertical;
+    min-height: 220px;
+    transition: border-color 0.2s;
+  }
+
+  textarea:focus { border-color: var(--accent); }
+  textarea::placeholder { color: var(--muted); font-size: 0.82rem; }
+
+  .char-count {
+    text-align: right;
+    font-size: 0.7rem;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+
+  .btn-main {
+    width: 100%;
+    padding: 18px;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: 14px;
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-main:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px #00e87a35;
+  }
+
+  .btn-main:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .error-msg {
+    display: none;
+    background: #ff475715;
+    border: 1px solid #ff475740;
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 0.83rem;
+    color: #ff8fa3;
+    margin-top: 12px;
+    line-height: 1.5;
+  }
+  .error-msg.show { display: block; }
+
+  .loading { display: none; text-align: center; padding: 60px 20px; }
+  .loading.show { display: block; }
+
+  .loader-ring {
+    width: 56px; height: 56px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.9s linear infinite;
+    margin: 0 auto 20px;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .loader-text {
+    font-family: var(--font-head);
+    font-size: 0.78rem;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+
+  .results { display: none; }
+  .results.show { display: block; }
+
+  .score-hero {
+    border-radius: 20px;
+    padding: 40px 24px;
+    text-align: center;
+    margin-bottom: 16px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  .score-hero.go { border-color: #00e87a50; }
+  .score-hero.maybe { border-color: #ffb30050; }
+  .score-hero.skip { border-color: #ff475750; }
+
+  .score-pct {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(5rem, 16vw, 8rem);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .score-hero.go .score-pct { color: var(--accent); }
+  .score-hero.maybe .score-pct { color: var(--warn); }
+  .score-hero.skip .score-pct { color: var(--danger); }
+
+  .score-verdict {
+    font-family: var(--font-head);
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .score-hero.go .score-verdict { color: var(--accent); }
+  .score-hero.maybe .score-verdict { color: var(--warn); }
+  .score-hero.skip .score-verdict { color: var(--danger); }
+
+  .score-text {
+    font-size: 0.95rem;
+    color: var(--text);
+    max-width: 520px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 22px;
+    margin-bottom: 14px;
+  }
+
+  .card-title {
+    font-family: var(--font-head);
+    font-size: 0.68rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .card-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .dim-list { display: flex; flex-direction: column; gap: 14px; }
+
+  .dim-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 5px;
+  }
+
+  .dim-name { font-size: 0.85rem; font-weight: 500; }
+
+  .dim-pct {
+    font-family: var(--font-head);
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+
+  .bar {
+    height: 4px;
+    background: var(--border);
+    border-radius: 99px;
+    overflow: hidden;
+    margin-bottom: 4px;
+  }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+    width: 0;
+  }
+
+  .bar-fill.c-go { background: var(--accent); }
+  .bar-fill.c-maybe { background: var(--warn); }
+  .bar-fill.c-skip { background: var(--danger); }
+
+  .dim-note { font-size: 0.77rem; color: var(--muted); line-height: 1.45; }
+
+  .tags-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+
+  @media(max-width: 500px) { .tags-grid { grid-template-columns: 1fr; } }
+
+  .tags-wrap { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 8px; }
+
+  .tag {
+    font-size: 0.72rem;
+    padding: 4px 10px;
+    border-radius: 7px;
+    font-weight: 500;
+  }
+
+  .tag.match {
+    background: #00e87a12;
+    color: var(--accent);
+    border: 1px solid #00e87a25;
+  }
+
+  .tag.gap {
+    background: #ffb30012;
+    color: var(--warn);
+    border: 1px solid #ffb30025;
+  }
+
+  .rec-text { font-size: 0.9rem; line-height: 1.75; color: var(--text); }
+
+  .actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  @media(max-width: 440px) { .actions { grid-template-columns: 1fr; } }
+
+  .btn-sec {
+    padding: 14px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-family: var(--font-head);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.18s;
+  }
+
+  .btn-sec:hover { border-color: var(--accent); color: var(--accent); }
+
+  .btn-cta {
+    padding: 14px;
+    border-radius: 12px;
+    border: none;
+    background: var(--accent);
+    color: #000;
+    font-family: var(--font-head);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.18s;
+  }
+
+  .btn-cta:hover { box-shadow: 0 6px 24px #00e87a35; transform: translateY(-1px); }
+
+  footer {
+    text-align: center;
+    padding: 24px;
+    border-top: 1px solid var(--border);
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="badge">⚡ IA · Análisis instantáneo</div>
+  <h1>¿Vale la pena<br><span>postularse?</span></h1>
+  <p>Pegá tu CV y la oferta de trabajo. En segundos sabés el porcentaje de compatibilidad — antes de gastar tiempo adaptando.</p>
+</div>
+
+<div class="container">
+
+  <div class="steps">
+    <div class="step active"><div class="step-num">1</div><span>Pegá tu CV</span></div>
+    <div class="step-arrow"></div>
+    <div class="step active"><div class="step-num">2</div><span>Pegá la oferta</span></div>
+    <div class="step-arrow"></div>
+    <div class="step"><div class="step-num">3</div><span>Ves el match</span></div>
+  </div>
+
+  <div class="inputs-grid">
+    <div class="input-card">
+      <div class="input-label"><span class="dot"></span>Tu CV</div>
+      <textarea id="cvInput" placeholder="Pegá aquí tu CV completo — nombre, experiencia laboral, logros, habilidades, educación, certificaciones..." oninput="updateCount('cvInput','cvCount')"></textarea>
+      <div class="char-count"><span id="cvCount">0</span> caracteres</div>
+    </div>
+    <div class="input-card">
+      <div class="input-label"><span class="dot"></span>Oferta de trabajo</div>
+      <textarea id="jobInput" placeholder="Pegá aquí el texto de la oferta — título del puesto, responsabilidades, requisitos, habilidades requeridas..." oninput="updateCount('jobInput','jobCount')"></textarea>
+      <div class="char-count"><span id="jobCount">0</span> caracteres</div>
+    </div>
+  </div>
+
+  <button class="btn-main" id="analyzeBtn" onclick="analyze()">⚡ Analizar compatibilidad</button>
+
+  <div class="error-msg" id="errorMsg"></div>
+
+  <div class="loading" id="loadingArea">
+    <div class="loader-ring"></div>
+    <div class="loader-text" id="loaderText">Analizando...</div>
+  </div>
+
+  <div class="results" id="resultsArea">
+    <div class="score-hero" id="scoreHero">
+      <div class="score-pct" id="scorePct">—</div>
+      <div class="score-verdict" id="scoreVerdict"></div>
+      <div class="score-text" id="scoreText"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Análisis por dimensión</div>
+      <div class="dim-list" id="dimList"></div>
+    </div>
+
+    <div class="tags-grid">
+      <div class="card" style="margin-bottom:0">
+        <div class="card-title">✓ Coincidencias</div>
+        <div class="tags-wrap" id="matchTags"></div>
+      </div>
+      <div class="card" style="margin-bottom:0">
+        <div class="card-title">⚠ Lo que falta</div>
+        <div class="tags-wrap" id="gapTags"></div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:14px">
+      <div class="card-title">Recomendación</div>
+      <div class="rec-text" id="recText"></div>
+    </div>
+
+    <div class="actions">
+      <button class="btn-sec" onclick="reset()">↺ Analizar otra oferta</button>
+      <button class="btn-cta" id="copyBtn" onclick="copyReport()">📋 Copiar informe</button>
+    </div>
+  </div>
+
+</div>
+
+<footer>Analizador de CV con IA · Gratuito para todos</footer>
+
+<script>
+let lastResult = null;
+const loaderMsgs = ['Leyendo tu CV...','Analizando la oferta...','Cruzando datos...','Calculando compatibilidad...','Generando recomendación...'];
+
+function updateCount(tid, cid) {
+  document.getElementById(cid).textContent = document.getElementById(tid).value.length;
+}
+
+function showError(msg) {
+  const el = document.getElementById('errorMsg');
+  el.textContent = msg;
+  el.classList.add('show');
+}
+
+function hideError() { document.getElementById('errorMsg').classList.remove('show'); }
+
+async function analyze() {
+  const cv = document.getElementById('cvInput').value.trim();
+  const job = document.getElementById('jobInput').value.trim();
+  hideError();
+
+  if (cv.length < 100) { showError('Pegá tu CV completo (experiencia, logros, habilidades).'); return; }
+  if (job.length < 100) { showError('Pegá el texto completo de la oferta de trabajo.'); return; }
+
+  document.getElementById('analyzeBtn').disabled = true;
+  document.getElementById('resultsArea').classList.remove('show');
+  document.getElementById('loadingArea').classList.add('show');
+
+  let i = 0;
+  const interval = setInterval(() => {
+    document.getElementById('loaderText').textContent = loaderMsgs[i++ % loaderMsgs.length];
+  }, 1500);
+
+  try {
+    const res = await fetch('/.netlify/functions/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ cv, job })
+    });
+
+    clearInterval(interval);
+    const r = await res.json();
+    if (r.error) throw new Error(r.error);
+    lastResult = r;
+    document.getElementById('loadingArea').classList.remove('show');
+    renderResults(r);
+
+  } catch(e) {
+    clearInterval(interval);
+    document.getElementById('loadingArea').classList.remove('show');
+    document.getElementById('analyzeBtn').disabled = false;
+    showError('Error al analizar: ' + e.message);
+  }
+}
+
+function renderResults(r) {
+  const score = Math.max(0, Math.min(100, r.score || 0));
+  const level = score >= 70 ? 'go' : score >= 45 ? 'maybe' : 'skip';
+  const label = score >= 70 ? '✓ Vale la pena postularse' : score >= 45 ? '~ Evaluar con cuidado' : '✗ No es el momento';
+
+  const hero = document.getElementById('scoreHero');
+  hero.className = 'score-hero ' + level;
+  document.getElementById('scorePct').textContent = score + '%';
+  document.getElementById('scoreVerdict').textContent = label;
+  document.getElementById('scoreText').textContent = r.verdict || '';
+
+  const dimList = document.getElementById('dimList');
+  dimList.innerHTML = '';
+  (r.dimensions || []).forEach(d => {
+    const s = Math.max(0, Math.min(100, d.score || 0));
+    const cls = s >= 70 ? 'c-go' : s >= 45 ? 'c-maybe' : 'c-skip';
+    const col = s >= 70 ? 'var(--accent)' : s >= 45 ? 'var(--warn)' : 'var(--danger)';
+    const id = 'b' + Math.random().toString(36).slice(2);
+    dimList.innerHTML += `
+      <div>
+        <div class="dim-top">
+          <span class="dim-name">${d.name}</span>
+          <span class="dim-pct" style="color:${col}">${s}%</span>
+        </div>
+        <div class="bar"><div class="bar-fill ${cls}" id="${id}"></div></div>
+        <div class="dim-note">${d.note || ''}</div>
+      </div>`;
+    setTimeout(() => { const el = document.getElementById(id); if(el) el.style.width = s + '%'; }, 100);
+  });
+
+  document.getElementById('matchTags').innerHTML =
+    (r.matches || []).slice(0,12).map(k => `<span class="tag match">${k}</span>`).join('');
+  document.getElementById('gapTags').innerHTML =
+    (r.gaps || []).slice(0,8).map(k => `<span class="tag gap">${k}</span>`).join('');
+  document.getElementById('recText').textContent = r.recommendation || '';
+
+  document.getElementById('resultsArea').classList.add('show');
+  document.getElementById('analyzeBtn').disabled = false;
+  document.getElementById('resultsArea').scrollIntoView({ behavior: 'smooth' });
+}
+
+function copyReport() {
+  if (!lastResult) return;
+  const r = lastResult;
+  const score = Math.max(0, Math.min(100, r.score || 0));
+  const text = `INFORME DE COMPATIBILIDAD CV
+────────────────────────────
+Score: ${score}%
+Veredicto: ${r.verdict}
+
+DIMENSIONES:
+${(r.dimensions||[]).map(d=>`• ${d.name}: ${d.score}% — ${d.note}`).join('\n')}
+
+COINCIDENCIAS: ${(r.matches||[]).join(', ')}
+GAPS: ${(r.gaps||[]).join(', ')}
+
+RECOMENDACIÓN:
+${r.recommendation}`;
+
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = '✓ Copiado!';
+    setTimeout(() => btn.textContent = '📋 Copiar informe', 2000);
+  });
+}
+
+function reset() {
+  document.getElementById('cvInput').value = '';
+  document.getElementById('jobInput').value = '';
+  document.getElementById('cvCount').textContent = '0';
+  document.getElementById('jobCount').textContent = '0';
+  document.getElementById('resultsArea').classList.remove('show');
+  hideError();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

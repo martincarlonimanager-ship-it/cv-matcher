@@ -76,6 +76,45 @@
     padding: 36px 20px 60px;
   }
 
+  .steps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: 32px;
+  }
+
+  .step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.75rem;
+    font-family: var(--font-head);
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  .step.active { color: var(--accent); }
+
+  .step-num {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 1px solid currentColor;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.68rem;
+    font-weight: 700;
+  }
+
+  .step-arrow {
+    width: 40px;
+    height: 1px;
+    background: var(--border);
+    margin: 0 8px;
+  }
+
   .inputs-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -130,6 +169,7 @@
   }
 
   textarea:focus { border-color: var(--accent); }
+  textarea::placeholder { color: var(--muted); font-size: 0.82rem; }
 
   .char-count {
     text-align: right;
@@ -170,6 +210,7 @@
     font-size: 0.83rem;
     color: #ff8fa3;
     margin-top: 12px;
+    line-height: 1.5;
   }
   .error-msg.show { display: block; }
 
@@ -208,6 +249,7 @@
   }
 
   .score-hero.go { border-color: #00e87a50; }
+  .score-hero.maybe { border-color: #ffb30050; }
   .score-hero.skip { border-color: #ff475750; }
 
   .score-pct {
@@ -219,6 +261,7 @@
   }
 
   .score-hero.go .score-pct { color: var(--accent); }
+  .score-hero.maybe .score-pct { color: var(--warn); }
   .score-hero.skip .score-pct { color: var(--danger); }
 
   .score-verdict {
@@ -230,9 +273,16 @@
   }
 
   .score-hero.go .score-verdict { color: var(--accent); }
+  .score-hero.maybe .score-verdict { color: var(--warn); }
   .score-hero.skip .score-verdict { color: var(--danger); }
 
-  .score-text { font-size: 0.95rem; color: var(--text); max-width: 520px; margin: 0 auto; line-height: 1.6; }
+  .score-text {
+    font-size: 0.95rem;
+    color: var(--text);
+    max-width: 520px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
 
   .card {
     background: var(--surface);
@@ -254,69 +304,173 @@
     gap: 10px;
   }
 
-  .card-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-
-  .output-box {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    padding: 16px;
-    border-radius: 10px;
-    white-space: pre-wrap;
-    font-size: 0.88rem;
-    max-height: 300px;
-    overflow-y: auto;
-    margin-bottom: 12px;
-    color: #e2e8f0;
+  .card-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
   }
 
-  .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+  .dim-list { display: flex; flex-direction: column; gap: 14px; }
+
+  .dim-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 5px;
+  }
+
+  .dim-name { font-size: 0.85rem; font-weight: 500; }
+
+  .dim-pct {
+    font-family: var(--font-head);
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+
+  .bar {
+    height: 4px;
+    background: var(--border);
+    border-radius: 99px;
+    overflow: hidden;
+    margin-bottom: 4px;
+  }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+    width: 0;
+  }
+
+  .bar-fill.c-go { background: var(--accent); }
+  .bar-fill.c-maybe { background: var(--warn); }
+  .bar-fill.c-skip { background: var(--danger); }
+
+  .dim-note { font-size: 0.77rem; color: var(--muted); line-height: 1.45; }
+
+  .tags-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+
+  @media(max-width: 500px) { .tags-grid { grid-template-columns: 1fr; } }
+
+  .tags-wrap { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 8px; }
+
+  .tag {
+    font-size: 0.72rem;
+    padding: 4px 10px;
+    border-radius: 7px;
+    font-weight: 500;
+  }
+
+  .tag.match {
+    background: #00e87a12;
+    color: var(--accent);
+    border: 1px solid #00e87a25;
+  }
+
+  .tag.gap {
+    background: #ffb30012;
+    color: var(--warn);
+    border: 1px solid #ffb30025;
+  }
+
+  .rec-text { font-size: 0.9rem; line-height: 1.75; color: var(--text); }
+
+  .actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  @media(max-width: 440px) { .actions { grid-template-columns: 1fr; } }
 
   .btn-sec {
-    padding: 14px; border-radius: 12px; border: 1px solid var(--border);
-    background: transparent; color: var(--muted); font-family: var(--font-head);
-    font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer;
+    padding: 14px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-family: var(--font-head);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.18s;
   }
+
   .btn-sec:hover { border-color: var(--accent); color: var(--accent); }
 
-  .btn-copy {
-    background: var(--border); color: var(--text); border: none; padding: 8px 14px;
-    border-radius: 6px; font-size: 0.75rem; cursor: pointer; font-family: var(--font-head);
+  .btn-cta {
+    padding: 14px;
+    border-radius: 12px;
+    border: none;
+    background: var(--accent);
+    color: #000;
+    font-family: var(--font-head);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.18s;
   }
-  .btn-copy:hover { background: #2e344d; color: var(--accent); }
 
-  footer { text-align: center; padding: 24px; border-top: 1px solid var(--border); font-size: 0.75rem; color: var(--muted); }
+  .btn-cta:hover { box-shadow: 0 6px 24px #00e87a35; transform: translateY(-1px); }
+
+  footer {
+    text-align: center;
+    padding: 24px;
+    border-top: 1px solid var(--border);
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
 </style>
 </head>
 <body>
 
 <div class="hero">
-  <div class="badge">⚡ IA · Análisis Automático ATS</div>
+  <div class="badge">⚡ IA · Análisis instantáneo</div>
   <h1>¿Vale la pena<br><span>postularse?</span></h1>
-  <p>Pegá tu CV y la oferta de trabajo abajo. Nuestro sistema inteligente evaluará tu perfil al instante.</p>
+  <p>Pegá tu CV y la oferta de trabajo. En segundos sabés el porcentaje de compatibilidad — antes de gastar tiempo adaptando.</p>
 </div>
 
 <div class="container">
 
+  <div class="steps">
+    <div class="step active"><div class="step-num">1</div><span>Pegá tu CV</span></div>
+    <div class="step-arrow"></div>
+    <div class="step active"><div class="step-num">2</div><span>Pegá la oferta</span></div>
+    <div class="step-arrow"></div>
+    <div class="step"><div class="step-num">3</div><span>Ves el match</span></div>
+  </div>
+
   <div class="inputs-grid">
     <div class="input-card">
-      <div class="input-label"><span class="dot"></span>Tu CV (Texto)</div>
-      <textarea id="cvInput" placeholder="Pegá tu CV completo acá..." oninput="updateCount('cvInput','cvCount')"></textarea>
+      <div class="input-label"><span class="dot"></span>Tu CV</div>
+      <textarea id="cvInput" placeholder="Pegá aquí tu CV completo — nombre, experiencia laboral, logros, habilidades, educación, certificaciones..." oninput="updateCount('cvInput','cvCount')"></textarea>
       <div class="char-count"><span id="cvCount">0</span> caracteres</div>
     </div>
     <div class="input-card">
       <div class="input-label"><span class="dot"></span>Oferta de trabajo</div>
-      <textarea id="jobInput" placeholder="Pegá los requisitos del puesto acá..." oninput="updateCount('jobInput','jobCount')"></textarea>
+      <textarea id="jobInput" placeholder="Pegá aquí el texto de la oferta — título del puesto, responsabilidades, requisitos, habilidades requeridas..." oninput="updateCount('jobInput','jobCount')"></textarea>
       <div class="char-count"><span id="jobCount">0</span> caracteres</div>
     </div>
   </div>
 
-  <button class="btn-main" id="analyzeBtn" onclick="analyzeLocal()">⚡ Analizar compatibilidad</button>
+  <button class="btn-main" id="analyzeBtn" onclick="analyze()">⚡ Analizar compatibilidad</button>
 
   <div class="error-msg" id="errorMsg"></div>
 
   <div class="loading" id="loadingArea">
     <div class="loader-ring"></div>
-    <div class="loader-text" id="loaderText">Analizando perfil con IA...</div>
+    <div class="loader-text" id="loaderText">Analizando...</div>
   </div>
 
   <div class="results" id="resultsArea">
@@ -326,64 +480,95 @@
       <div class="score-text" id="scoreText"></div>
     </div>
 
-    <div id="premiumOutputs" style="display:none">
-      <div class="card">
-        <div class="card-title">✉️ Carta de Presentación Estratégica</div>
-        <div class="output-box" id="letterText"></div>
-        <button class="btn-copy" onclick="copyId('letterText')">📋 Copiar Carta</button>
-      </div>
+    <div class="card">
+      <div class="card-title">Análisis por dimensión</div>
+      <div class="dim-list" id="dimList"></div>
+    </div>
 
-      <div class="card">
-        <div class="card-title">🤖 CV Reestructurado y Optimizado para ATS</div>
-        <div class="output-box" id="cvOptimizedText" style="font-family:monospace"></div>
-        <button class="btn-copy" onclick="copyId('cvOptimizedText')">📋 Copiar CV Adaptado</button>
+    <div class="tags-grid">
+      <div class="card" style="margin-bottom:0">
+        <div class="card-title">✓ Coincidencias</div>
+        <div class="tags-wrap" id="matchTags"></div>
+      </div>
+      <div class="card" style="margin-bottom:0">
+        <div class="card-title">⚠ Lo que falta</div>
+        <div class="tags-wrap" id="gapTags"></div>
       </div>
     </div>
 
+    <div class="card" style="margin-top:14px">
+      <div class="card-title">Recomendación</div>
+      <div class="rec-text" id="recText"></div>
+    </div>
+
     <div class="actions">
-      <button class="btn-sec" style="width:100%" onclick="reset()">↺ Analizar otra oferta</button>
+      <button class="btn-sec" onclick="reset()">↺ Analizar otra oferta</button>
+      <button class="btn-cta" id="copyBtn" onclick="copyReport()">📋 Copiar informe</button>
     </div>
   </div>
 
 </div>
 
-<footer>Analizador de CV Privado · Potenciado con Inteligencia Artificial</footer>
+<footer>Analizador de CV con IA · Gratuito para todos</footer>
 
 <script>
-function updateCount(tid, cid) { document.getElementById(cid).textContent = document.getElementById(tid).value.length; }
-function showError(msg) { const el = document.getElementById('errorMsg'); el.textContent = msg; el.classList.add('show'); }
+let lastResult = null;
+const loaderMsgs = ['Leyendo tu CV...','Analizando la oferta...','Cruzando datos...','Calculando compatibilidad...','Generando recomendación...'];
+
+function updateCount(tid, cid) {
+  document.getElementById(cid).textContent = document.getElementById(tid).value.length;
+}
+
+function showError(msg) {
+  const el = document.getElementById('errorMsg');
+  el.textContent = msg;
+  el.classList.add('show');
+}
+
 function hideError() { document.getElementById('errorMsg').classList.remove('show'); }
 
-async function analyzeLocal() {
+async function analyze() {
   const cv = document.getElementById('cvInput').value.trim();
   const job = document.getElementById('jobInput').value.trim();
   hideError();
 
-  if(cv.length < 30) { showError('Por favor, pegá tu CV en el primer cuadro.'); return; }
-  if(job.length < 30) { showError('Por favor, pegá la oferta de trabajo en el segundo cuadro.'); return; }
-
-  // 🔴 PEGA TU API KEY DE GEMINI ADENTRO DE LAS COMILLAS EN LA SIGUIENTE LÍNEA:
-  const key = "AIzaSyDcww-UniRSPT9gELWt3MRzLjCQYciBuxQ";
-
-  if(!key || key.startsWith("PEGÁ")) { 
-    showError('Error de configuración del sistema: Falta cargar la clave interna.'); 
-    return; 
-  }
+  if (cv.length < 100) { showError('Pegá tu CV completo (experiencia, logros, habilidades).'); return; }
+  if (job.length < 100) { showError('Pegá el texto completo de la oferta de trabajo.'); return; }
 
   document.getElementById('analyzeBtn').disabled = true;
   document.getElementById('resultsArea').classList.remove('show');
   document.getElementById('loadingArea').classList.add('show');
 
+  let i = 0;
+  const interval = setInterval(() => {
+    document.getElementById('loaderText').textContent = loaderMsgs[i++ % loaderMsgs.length];
+  }, 1500);
+
+  // 🔴 METÉ TU API KEY DE GEMINI ACÁ ADENTRO MANTENIENDO LAS COMILLAS:
+  const key = "AIzaSyDcww-UniRSPT9gELWt3MRzLjCQYciBuxQ";
+
+  if(!key || key.startsWith("TU_API")) {
+    clearInterval(interval);
+    document.getElementById('loadingArea').classList.remove('show');
+    document.getElementById('analyzeBtn').disabled = false;
+    showError('Error: Falta configurar la clave del sistema.');
+    return;
+  }
+
   const prompt = `
-    Actúa como un experto en reclutamiento corporativo y ATS. Analizarás éticamente el CV y la oferta.
-    REGLA INQUEBRANTABLE: ADAPTAR NO ES MENTIR. No inventes experiencia que el candidato no tenga.
-    
-    Genera estrictamente un JSON estructurado así:
+    Actúa como un experto en reclutamiento corporativo y ATS. Analiza el CV y la oferta adjuntos.
+    Devuelve estrictamente un objeto JSON estructurado exactamente así, sin markdown ni textos extra:
     {
       "score": (número entero de 0 a 100),
-      "recommendation": "Feedback detallado de fortalezas, debilidades y palabras clave que faltan.",
-      "coverLetter": "Carta formal basada solo en hitos reales del CV adaptados al lenguaje de la vacante. Vacío si el score < 70.",
-      "adaptedCv": "CV en texto plano, una sola columna, sin tablas, optimizado con los términos exactos de la oferta para pasar filtros ATS de forma honesta. Vacío si el score < 70."
+      "verdict": "Breve frase resumen del veredicto",
+      "recommendation": "Tu consejo estratégico detallado",
+      "dimensions": [
+        {"name": "Experiencia Técnica", "score": 80, "note": "Breve nota"},
+        {"name": "Habilidades Blandas", "score": 60, "note": "Breve nota"},
+        {"name": "Educación y Certificaciones", "score": 90, "note": "Breve nota"}
+      ],
+      "matches": ["palabra1", "palabra2"],
+      "gaps": ["palabra3", "palabra4"]
     }
 
     CV: ${cv}
@@ -401,61 +586,75 @@ async function analyzeLocal() {
       })
     });
 
-    if(!response.ok) throw new Error('Error al conectar con el motor de IA. Verificá la clave interna.');
+    clearInterval(interval);
+    if (!response.ok) throw new Error('Error al conectar con Gemini. Revisá tu clave.');
 
     const data = await response.json();
     const cleanJson = data.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '').trim();
     const r = JSON.parse(cleanJson);
-
+    
+    lastResult = r;
     document.getElementById('loadingArea').classList.remove('show');
-    renderLocalResults(r);
+    renderResults(r);
 
   } catch(e) {
+    clearInterval(interval);
     document.getElementById('loadingArea').classList.remove('show');
     document.getElementById('analyzeBtn').disabled = false;
-    showError('Hubo un problema: ' + e.message);
+    showError('Error al analizar: ' + e.message);
   }
 }
 
-function renderLocalResults(r) {
+function renderResults(r) {
   const score = Math.max(0, Math.min(100, r.score || 0));
-  const level = score >= 70 ? 'go' : 'skip';
-  const label = score >= 70 ? '✓ ¡Excelente match! Vale la pena postularse' : '✗ Compatibilidad baja';
+  const level = score >= 70 ? 'go' : score >= 45 ? 'maybe' : 'skip';
+  const label = score >= 70 ? '✓ Vale la pena postularse' : score >= 45 ? '~ Evaluar con cuidado' : '✗ No es el momento';
 
   const hero = document.getElementById('scoreHero');
   hero.className = 'score-hero ' + level;
   document.getElementById('scorePct').textContent = score + '%';
   document.getElementById('scoreVerdict').textContent = label;
-  document.getElementById('scoreText').textContent = r.recommendation;
+  document.getElementById('scoreText').textContent = r.verdict || '';
 
-  const premium = document.getElementById('premiumOutputs');
-  if(score >= 70) {
-    document.getElementById('letterText').textContent = r.coverLetter;
-    document.getElementById('cvOptimizedText').textContent = r.adaptedCv;
-    premium.style.display = 'block';
-  } else {
-    premium.style.display = 'none';
-    document.getElementById('scoreText').innerHTML += `<br><br><span style="color:var(--danger)">⚠️ Aviso: Como el match es menor al 70%, no se autogeneró la documentación para resguardar la precisión de tu postulación.</span>`;
-  }
+  const dimList = document.getElementById('dimList');
+  dimList.innerHTML = '';
+  (r.dimensions || []).forEach(d => {
+    const s = Math.max(0, Math.min(100, d.score || 0));
+    const cls = s >= 70 ? 'c-go' : s >= 45 ? 'c-maybe' : 'c-skip';
+    const col = s >= 70 ? 'var(--accent)' : s >= 45 ? 'var(--warn)' : 'var(--danger)';
+    const id = 'b' + Math.random().toString(36).slice(2);
+    dimList.innerHTML += `
+      <div>
+        <div class="dim-top">
+          <span class="dim-name">${d.name}</span>
+          <span class="dim-pct" style="color:${col}">${s}%</span>
+        </div>
+        <div class="bar"><div class="bar-fill ${cls}" id="${id}"></div></div>
+        <div class="dim-note">${d.note || ''}</div>
+      </div>`;
+    setTimeout(() => { const el = document.getElementById(id); if(el) el.style.width = s + '%'; }, 100);
+  });
+
+  document.getElementById('matchTags').innerHTML =
+    (r.matches || []).slice(0,12).map(k => `<span class="tag match">${k}</span>`).join('');
+  document.getElementById('gapTags').innerHTML =
+    (r.gaps || []).slice(0,8).map(k => `<span class="tag gap">${k}</span>`).join('');
+  document.getElementById('recText').textContent = r.recommendation || '';
 
   document.getElementById('resultsArea').classList.add('show');
   document.getElementById('analyzeBtn').disabled = false;
   document.getElementById('resultsArea').scrollIntoView({ behavior: 'smooth' });
 }
 
-function copyId(id) {
-  navigator.clipboard.writeText(document.getElementById(id).textContent);
-  alert('¡Copiado con éxito!');
-}
+function copyReport() {
+  if (!lastResult) return;
+  const r = lastResult;
+  const score = Math.max(0, Math.min(100, r.score || 0));
+  const text = `INFORME DE COMPATIBILIDAD CV
+────────────────────────────
+Score: ${score}%
+Veredicto: ${r.verdict}
 
-function reset() {
-  document.getElementById('cvInput').value = '';
-  document.getElementById('jobInput').value = '';
-  document.getElementById('cvCount').textContent = '0';
-  document.getElementById('jobCount').textContent = '0';
-  document.getElementById('resultsArea').classList.remove('show');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-</script>
-</body>
-</html>
+DIMENSIONES:
+${(r
+
